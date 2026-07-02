@@ -8,9 +8,15 @@ spec:
     - name: dockerconfig-ws
   params:
     - name: build-image
+      type: string
     - name: repo-url
+      type: string
     - name: branch
+      type: string
       default: main
+    - name: app-name 
+      type: string
+      description: "Nombre de la aplicación para la imagen"
   tasks:
   
     - name: init
@@ -57,11 +63,13 @@ spec:
       workspaces:
         - name: source
           workspace: pipeline-workspace
+        - name: dockerconfig 
+          workspace: dockerconfig-ws
       taskRef:
         name: buildah
         kind: ClusterTask
       params:
       - name: IMAGE
-        value: "us.icr.io/$(context.pipelineRun.namespace)/$(params.app-name)"
+        value: "us.icr.io/$(context.pipelineRun.namespace)/$(params.app-name)" 
       runAfter:
-        - tests  
+        - tests
